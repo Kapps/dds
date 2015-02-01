@@ -1,0 +1,34 @@
+﻿<Properties StartupItem="dub.json">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Default" PreferredExecutionTarget="plain" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="dub.json">
+    <Files>
+      <File FileName="dub.json" Line="1" Column="1" />
+      <File FileName="src\main.d" Line="3" Column="3" />
+      <File FileName="src\dds\commands\Command.d" Line="23" Column="23" />
+      <File FileName="src\dds\ui\EditorPanel.d" Line="3" Column="3" />
+      <File FileName="src\dds\ui\SourcePad.d" Line="41" Column="41" />
+      <File FileName="src\dds\source\SourceFile.d" Line="11" Column="11" />
+      <File FileName="src\dds\source\CompletionProvider.d" Line="1" Column="1" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State expanded="True">
+          <Node name="dds" expanded="True">
+            <Node name="src" expanded="True">
+              <Node name="dds" expanded="True">
+                <Node name="commands" expanded="True" />
+                <Node name="source" expanded="True" />
+                <Node name="ui" expanded="True" />
+              </Node>
+            </Node>
+            <Node name="dub.json" selected="True" />
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>

@@ -1,0 +1,11 @@
+{
+	"fileVersion": 1,
+	"versions": {
+		"shardio": "~master",
+		"shardtools": "~master",
+		"tested": "~master",
+		"gtk-d": "~master",
+		"msgpack-d": "~master",
+		"shardmath": "~master"
+	}
+}
