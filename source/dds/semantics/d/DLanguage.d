@@ -1,4 +1,5 @@
 module dds.semantics.d.DLanguage;
+/+
 import dds.source.Language;
 import gsv.SourceLanguageManager;
 import gsv.SourceCompletionProvider;
@@ -25,4 +26,4 @@ class DLanguage : Language {
 		auto result = new SourceCompletionProvider(cast(GtkSourceCompletionProvider*)w);
 		return result;
 	}
-}
+}+/

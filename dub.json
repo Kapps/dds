@@ -7,9 +7,9 @@
 	"license": "Boost",
 	"dependencies": {
 		"shardtools": "~master",
-		"shardio": "~master",
 		"dlangui": "~master",
-		"vibe-d": ">=0.7.22"
+		"vibe-d": "~master"
 	},
+	"versions": ["VibeCustomMain"],
 	"targetType": "executable"
 }

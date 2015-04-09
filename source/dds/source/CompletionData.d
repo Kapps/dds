@@ -1,4 +1,5 @@
 module dds.source.CompletionData;
+/+
 public import dds.source.CompletionItem;
 
 final class CompletionData {
@@ -11,3 +12,4 @@ final class CompletionData {
 	}
 }
 
++/

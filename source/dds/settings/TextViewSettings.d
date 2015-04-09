@@ -12,7 +12,7 @@ public enum SpaceType {
 public class SourceViewSettings {
 
 	/// Gets or sets a value indicating how to handle the user pressing the tab key.
-	@DefaultValue!(SpaceType)(SpaceType.tabs)
+	@defaultValue(SpaceType.tabs)
 	public SpaceType spaceType() const {
 		return _spaceType;
 	}

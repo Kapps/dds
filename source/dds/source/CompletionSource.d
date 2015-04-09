@@ -1,4 +1,5 @@
 module dds.source.CompletionSource;
+/+
 import dds.source.CompletionContext;
 
 /// Provides a single source of auto-complete data within a `CompletionProvider`.
@@ -23,3 +24,4 @@ abstract class CompletionSource {
 	private string _name;
 }
 
++/

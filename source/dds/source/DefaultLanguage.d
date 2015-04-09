@@ -1,4 +1,5 @@
 module dds.source.DefaultLanguage;
+/+
 import gsv.SourceLanguage;
 import gsv.SourceLanguageManager;
 import dds.source.Language;
@@ -35,3 +36,4 @@ class DefaultLanguage : Language {
 	private SourceLanguage _guessedLanguage;
 }
 
++/

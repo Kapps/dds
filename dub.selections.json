@@ -1,11 +1,24 @@
 {
 	"fileVersion": 1,
 	"versions": {
-		"shardio": "~master",
-		"shardtools": "~master",
+		"shardmath": "~master",
+		"libasync": "0.7.1",
 		"tested": "~master",
-		"gtk-d": "~master",
+		"memutils": "0.3.1",
+		"derelict-fi": "~master",
+		"derelict-gl3": "1.0.12",
+		"derelict-sdl2": "1.9.4",
+		"openssl": "1.1.4+1.0.1g",
+		"vibe-d": "~master",
+		"derelict-util": "1.9.1",
+		"dlib": "~master",
+		"libevent": "2.0.1+2.0.16",
+		"gl3n": "1.0.1",
+		"derelict-ft": "1.0.2",
+		"libev": "5.0.0+4.04",
+		"dlangui": "~master",
 		"msgpack-d": "~master",
-		"shardmath": "~master"
+		"shardtools": "~master",
+		"dsfml": "~master"
 	}
 }

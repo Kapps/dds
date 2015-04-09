@@ -1,7 +1,7 @@
 module dds.settings.SettingsAnnotations;
 
 /// Indicates that this property should use a default value if no value is set specifically or inherited.
-struct defaultValue(T) {
+struct DefaultValue(T) {
 
 	/// Gets the value that should be used as the default.
 	@property T value() {
@@ -14,4 +14,9 @@ struct defaultValue(T) {
 	}
 
 	private T _value;
+}
+
+/// Ditto
+auto defaultValue(T)(T val) {
+	return DefaultValue!T(val);
 }

@@ -1,4 +1,5 @@
 module dds.source.Language;
+/+
 public import dds.source.SourceFile;
 import dds.source.CompletionProvider;
 
@@ -38,3 +39,4 @@ abstract class Language {
 	// TODO: performSemanticHighlighting : takes in a TokenStream of the visible tokens. Probably just the ones that have updated. -> Done in background.
 }
 
++/

@@ -1,4 +1,5 @@
 module dds.source.LanguageManager;
+/+
 import dds.source.Language;
 import std.uni;
 import std.string;
@@ -58,3 +59,4 @@ public static shared class LanguageManager {
 	static __gshared Language[string] _languages;
 }
 
++/

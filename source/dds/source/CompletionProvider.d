@@ -1,4 +1,5 @@
 module dds.source.CompletionProvider;
+/+
 import dds.source.SourceFile;
 import dds.source.CompletionData;
 import std.uni;
@@ -26,3 +27,4 @@ private:
 	SourcePad _pad;
 }
 
++/

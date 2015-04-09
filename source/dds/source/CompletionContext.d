@@ -1,4 +1,5 @@
 module dds.source.CompletionContext;
+/+
 import dds.source.CompletionSource;
 import std.range.primitives;
 import dlangui.widgets.editors;
@@ -39,5 +40,5 @@ class CompletionContext {
 	private CompletionSource[] _sources;
 	private TextPosition _position;
 	private Array!CompletionItem _proposals;
-}
+}+/
 
