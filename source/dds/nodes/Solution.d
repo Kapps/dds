@@ -2,9 +2,9 @@
 
 import std.algorithm;
 
-import dds.nodes.HierarchyNode;
-import dds.nodes.Project;
-import dds.nodes.ContextMenu;
+public import dds.nodes.HierarchyNode;
+public import dds.nodes.Project;
+public import dds.nodes.ContextMenu;
 
 /// Represents a solution file, or workspace, within a hierarchy.
 /// This is considered the root node within a hierarchy and must always exist when a hierarchy is used.
@@ -12,27 +12,19 @@ import dds.nodes.ContextMenu;
 class Solution : Project {
 
 	/// Creates a new solution with the given name.
-	this(string name, Image icon) {
-		super(name, icon);
+	this(string baseDirectory, string name, Image icon) {
+		super(baseDirectory, "ssws", name, icon);
 	}
 
-	/// Returns a range that iterates over the projects within this solution.
+	/// Returns an InputRange that contains the (non-recursive) projects within this solution.
 	@property final auto projects() {
-		return children.byNode.map!(c=>cast(Project)c).filter!(c=>c);
+		return children.ofType!Project();
+	}
+
+	/// Returns a range that contains the files within this solution that are not part of a project.
+	@property final auto files() {
+		return children.ofType!FileNode();
 	}
 
 private:
-}
-
-/// Represents a single node within a solution.
-/// As well as the base HierarchyNode properties, this includes data such as context actions and properties.
-class SolutionNode : HierarchyNode {
-	/// Creates a new SolutionNode with the given name and icon.
-	this(string name, Image icon) {
-		super(name, icon);
-		this._contextMenu = new ContextMenu();
-	}
-	
-private:
-	ContextMenu _contextMenu; 
 }

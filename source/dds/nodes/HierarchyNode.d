@@ -10,6 +10,7 @@ import std.path;
 import std.string;
 import dds.nodes.Project;
 import dds.nodes.Solution;
+import vibe.d;
 
 /// Represents a character that indicates a separation of a HierarchyNode for a qualified name.
 enum char nodeSeparator = '.';
@@ -163,6 +164,11 @@ class HierarchyNode {
 		return this.qualifiedName ~ " (" ~ type ~ ")";
 	}
 
+protected:
+
+	/// Called when the parent of this node is changed (generally to be assigned for the first time).
+	void onParentChanged() { }
+
 private:
 	string _name;
 	HierarchyNode _parent;
@@ -195,6 +201,11 @@ final class NodeCollection {
 	@property auto byNode() {
 		return _nodes.byValue;
 	}
+
+	/// Returns an InputRange containing the children of this node that are convertible to T.
+	@property auto ofType(T : HierarchyNode)() {
+		return byNode.map!(c=>cast(T)c).filter!(c=>c);
+	}
 	
 	/// Gets the HierarchyNode with the given name that is contained by this collection.
 	HierarchyNode opIndex(string name) {
@@ -217,7 +228,8 @@ final class NodeCollection {
 	}
 	
 	/// Adds the specified node to this collection.
-	void add(HierarchyNode node) {
+	/// Returns the newly added node's children to allow chaining of .children.add(a).add(b).
+	NodeCollection add(HierarchyNode node) {
 		if(node.parent !is null)
 			throw new InvalidOperationException("A node with a parent set may not be added to a new collection.");
 		node.parent = this.owner;
@@ -225,6 +237,7 @@ final class NodeCollection {
 		if(identifier in _nodes)
 			throw new DuplicateKeyException("An item called " ~ identifier ~ " already exists within " ~ this.owner.text ~ ".");
 		_nodes[identifier] = node;
+		return node.children;
 	}
 	
 	/// Removes the specified node from this collection.
@@ -266,4 +279,127 @@ struct NodeReference {
 	HierarchyNode evaluate(Solution solution) {
 		return solution.findChild(qualifiedName);
 	}
+}
+
+/// Represents a single node within a solution.
+/// As well as the base HierarchyNode properties, this includes data such as context actions and properties.
+class SolutionNode : HierarchyNode {
+	/// Creates a new SolutionNode with the given name and icon.
+	this(string name, Image icon) {
+		super(name, icon);
+		this._contextMenu = new ContextMenu();
+	}
+	
+private:
+	ContextMenu _contextMenu; 
+}
+
+/// Represents a node that is used primarily to store child nodes within a solution.
+/// The primary example of a ContainerNode would be a directory within a Solution.
+class ContainerNode : SolutionNode {
+	/// Creates a ContainerNode with the given name and icon.
+	this(string name, Image icon) {
+		super(name, icon);
+	}
+}
+
+/// A node used to represent a single file that is a part of the solution.
+class FileNode : SolutionNode {
+	/// Creates a new FileNode with the given name (excluding extension), extension (including leading dot), and icon.
+	this(string name, string extension, Image icon) {
+		super(name, icon);
+		assert(extension.length && extension[0] == '.');
+		this._extension = extension;
+	}
+	
+	/// Gets the extension of this file, including the leading dot.
+	@property final string extension() {
+		return _extension;
+	}
+	
+	/// Returns whether this file can be saved at this time.
+	/// One reason for not being able to be saved would be that a current save is in progress.
+	@property bool canSave() {
+		return !_saveInProgress;
+	}
+	
+	/// Indicates whether the file has any changes that require saving.
+	@property final bool isDirty() {
+		return _isDirty;
+	}
+	
+	/// Marks this file as having changes that require saving.
+	final void markDirty() {
+		this._isDirty = true;
+	}
+	
+	/// Returns an InputStream that can be used to read the contents of this file.
+	/// Though this node does ultimately represent a file, this is not necessarily a FileStream.
+	/// Other examples of valid results are streams to read from HTTP pages, version control systems, and more.
+	final InputStream createInputStream() {
+		return performCreateInputStream();
+	}
+	
+	/// Saves the file back to the backing store with the given contents.
+	void saveFile(InputStream contents) {
+		if(!canSave)
+			throw new InvalidOperationException("Saving is not possible at this time.");
+		this._saveInProgress = true;
+		performSave(contents);
+		this._isDirty = false;
+		this._saveInProgress = false;
+	}
+	
+protected:
+	/// Implement to return an InputStream containing the input of this file.
+	abstract InputStream performCreateInputStream();
+	
+	/// Implement to perform the actual saving of the file to disk.
+	/// The result must be completed by the time the method returns, however the fiber can be yielded until the result is complete to provide asynchronous IO.
+	abstract void performSave(InputStream contents);
+	
+private:
+	string _extension;
+	bool _saveInProgress;
+	bool _isDirty;
+}
+
+/// Provides a FileNode that stores the contents of the file on a disk.
+class DiskFileNode : FileNode {
+	
+	/// Creates a new DiskFileNode with the given name, extension, and icon.
+	this(string name, string extension, Image icon) {
+		super(name, extension, icon);
+	}
+	
+	/// Returns the full path to this node on the disk.
+	@property final string filePath() {
+		assert(_filePath.length);
+		return _filePath;
+	}
+	
+protected:
+	override InputStream performCreateInputStream() {
+		return openFile(filePath, FileMode.read);
+	}
+	
+	override void performSave(InputStream contents) {
+		assert(filePath.length);
+		// Writes to a temporary file first to prevent corrupting data or truncating file on error.
+		string tempPath = filePath ~ ".tmp";
+		{
+			auto outputStream = openFile(tempPath, FileMode.createTrunc);
+			scope(exit) outputStream.finalize();
+			outputStream.write(contents);
+		}
+		moveFile(tempPath, filePath);
+	}
+	
+	override void onParentChanged() {
+		super.onParentChanged;
+		this._filePath = only(project.baseDirectory).chain(this.recurrence!((state, n)=>state[n-1].parent).until!(c=>cast(Solution)c.parent is null).map!(c=>c.name)).buildPath;
+	}
+	
+private:
+	string _filePath;
 }
